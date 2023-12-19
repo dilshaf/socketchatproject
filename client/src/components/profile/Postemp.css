@@ -1,0 +1,18 @@
+span{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.fa-regular.fa-heart {
+    color: black; /* Default color */
+  }
+
+  .liked .fa-regular.fa-heart {
+    display: none; /* Hide the regular heart icon when liked */
+  }
+
+  /* Styles for the solid heart icon when liked */
+  .liked .fa-solid.fa-heart {
+    color: #e20808; /* Color when liked */
+    display: inline-block; /* Show the solid heart icon when liked */
+  }
