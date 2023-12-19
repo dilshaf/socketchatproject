@@ -13,6 +13,7 @@ const Search = () => {
   const [formData, setFormData] = useState({
     description: "",
     image:null,
+  
   });
   const [details,setDetails]=useState({})
   const [refresh,setRefresh]=useState(false)
@@ -66,6 +67,7 @@ const Search = () => {
     data.append("description", formData.description);
     data.append("image", formData.image);
     data.append("userId", localStorage.getItem("id"));
+    // data.append("username",formData.username)
   
     console.log(data, 'dataaaaaaaaaaaa'); // Log the 'data' variable instead of 'formData'
     try {
@@ -76,6 +78,7 @@ const Search = () => {
         successToast("success");
         // setRefresh(!refresh)
         description('')
+        // username('')
       
       } else {
         console.error("Response or its 'data' property is undefined");

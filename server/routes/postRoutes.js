@@ -1,7 +1,7 @@
 import express from 'express'
 // import {getFeedPosts,getUserPosts,likePost} from '../controllers/posts.js'
 import { verifyToken } from '../middlewares/authMiddleware.js'
-import { commentPost, createPost,disLike,getPost, likePost  } from '../controllers/postController.js'
+import { commentPost, createPost,disLike,getAllPost,getPost, likePost  } from '../controllers/postController.js'
 import multer from 'multer'
 import path from 'path'
 
@@ -23,6 +23,8 @@ Postrouter.post('/search',upload.single('image'),createPost)
 //GET
 // Postrouter.get('/:id',getUserPost)
 Postrouter.get('/get/:id',getPost)
+Postrouter.get('/get',getAllPost)
+
 
 // LIKES
 Postrouter.post("/like",likePost)

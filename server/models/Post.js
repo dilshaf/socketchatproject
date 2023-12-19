@@ -4,8 +4,27 @@ const postSchema= new Schema(
     {
        
         userId:{
-            type:String,
+            type:Schema.Types.ObjectId,
             required:true,
+            ref:"mediareglog"
+        },
+
+
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+        updatedAt: {
+            type: Date,
+            default: Date.now
+        },
+
+
+
+
+    
+        username:{
+            type:String
         },
        
         
@@ -24,6 +43,17 @@ const postSchema= new Schema(
               islike: { type: Boolean, default: true },
             },
           ],
+
+
+          comments:[
+            {
+                type:String,
+                userId:{
+                    type:Schema.Types.ObjectId,
+                    ref:'mediareglog'
+                }
+            }
+          ]
 
     },{timestamps:true}
 )

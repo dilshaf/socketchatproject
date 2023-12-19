@@ -1,4 +1,5 @@
 import Post from "../models/Post.js"
+import Admin from "../models/User.js";
 
 export const createPost = async (req, res) => {
 
@@ -9,6 +10,7 @@ export const createPost = async (req, res) => {
         if(!description){
             return res.status(400).json({message:"description is required"})
           }
+         
           
       if(!images){
         return res.status(400).json({message:"Upload an image"})
@@ -126,12 +128,54 @@ export const getPost=async(req,res)=>{
     const {id}=req.params
     try {
         let response=await Post.find({userId:id})
-        res.status(201).json(response)
+
+        // let getUser = response.map(async(user)=>{
+        //     console.log(user);
+        //     const {...other} = user;
+            
+        //     const userall = await Admin.findById(user.username);
+        //     const {...userOther} = userall;
+        //     console.log(userall,"user");
+            
+        //     return{...other._doc,userData:userOther._doc}
+        // })
+
+        // const getData = await Promise.all(getUser);
+
+
+
+       
+
+        res.status(201).json(response);
     } catch (error) {
         res.status(401).json({message:error.message})
         
     }
 }
+
+
+export const getAllPost=async(req,res)=>{
+    try {
+       let response=await Post.find().populate("userId","_id username image")
+       res.status(201).json(response)
+
+    } catch (error) {
+        res.status(401).json({message:error.message})
+        
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
