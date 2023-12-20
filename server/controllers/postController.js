@@ -122,7 +122,29 @@ export const disLike=async(req,res)=>{
       }
 }
 
-
+export const postComment = async (req, res) => {
+    const { userid, postid, text,username } = req.body;
+  
+    try {
+      const post = await Post.findById(postid);
+  
+      if (!post) {
+        return res.status(404).json({ error: 'Post not found' });
+      }
+  
+    
+  
+      
+      post.comments.push({ userid, text,username });
+     let response = await post.save();
+  
+      res.json({ message: response, status:true });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
 
 export const getPost=async(req,res)=>{
     const {id}=req.params
@@ -156,8 +178,95 @@ export const getPost=async(req,res)=>{
 
 export const getAllPost=async(req,res)=>{
     try {
-       let response=await Post.find().populate("userId","_id username image")
-       res.status(201).json(response)
+       let response=await Post.find()
+
+    //   response.map(async(post)=>{
+    //     // get the post
+
+    //     post.comments.map((comment)=>{
+    //         console.log(comment,'comment')
+    //     })
+
+    //    let res = await post.comments
+       
+    
+    //    console.log(res,'resss')
+    // }
+
+       
+       
+    //    )
+    //    .map(async(item)=>{
+    //     // get the comments
+    //      let responseForCommentWithUserData =  await Promise.all(item.map(async(comment)=>{
+    //         // get the command
+    //         const {...other } = comment._doc
+
+    //         const user = await Admin.findById(comment.userid);
+
+    //         const { username,image,...others } = user._doc
+
+    //         other.username = username
+    //         other.image = image
+
+    //         return other
+
+    //     }
+        
+        
+    //     ))
+    //      return responseForCommentWithUserData
+    // })
+
+
+
+    let rrr = await Promise.all( response.map(async(post)=>{
+      console.log(post,'post you');
+
+        const {comments,...others} = post._doc
+        // get one post
+        console.log(others,'posts');
+
+        const user = await Admin.findById(post.userId);
+
+
+
+       let r =  await Promise.all( post.comments.map(async(comment)=>{
+            // get the comment
+          
+            const {...other } = comment._doc
+
+            const user = await Admin.findById(comment.userid);
+
+            const { username,image,...others } = user._doc
+
+            other.username = username
+            other.image = image
+
+            return other
+        }))
+
+        console.log(r,'get the comment and user name')
+        console.log(others,'othessssssssssssssssssss');
+
+
+         others.comments = r
+         others.username =  user.username; 
+         others.profilePic =  user.image; 
+
+         return others
+
+
+    }))
+
+
+
+
+    // console.log(rrr,'response');
+
+       
+    //    return true
+       res.status(201).json(rrr)
 
     } catch (error) {
         res.status(401).json({message:error.message})
@@ -180,25 +289,28 @@ export const getAllPost=async(req,res)=>{
 
 
 
-export const commentPost=async(req,res)=>{
-    try {
-        const {id}=req.params
-        const {userId}=req.body
-        const post=await Post.findById(id)
-        const isComment=post.comments.get(userId)
+// export const commentPost=async(req,res)=>{
+//     try {
+//         const {id}=req.params
+//         const {userId}=req.body
+//         const post=await Post.findById(id)
+//         const isComment=post.comments.get(userId)
 
-        if(isComment){
-            post.comments.delete(userId)
-        }else{
-            post.comments.set(userId,true)
-        }
+//         if(isComment){
+//             post.comments.delete(userId)
+//         }else{
+//             post.comments.set(userId,true)
+//         }
 
-        const updatedPost=await Post.findByIdAndUpdate(id,{comments:post.comments},{new:true})
-        res.status(201).json(updatedPost)
+//         const updatedPost=await Post.findByIdAndUpdate(id,{comments:post.comments},{new:true})
+//         res.status(201).json(updatedPost)
         
-    } catch (error) {
-        res.status(404).json({message:error.message || null});
+//     } catch (error) {
+//         res.status(404).json({message:error.message || null});
         
-    }
-}
+//     }
+// }
+
+
+
 

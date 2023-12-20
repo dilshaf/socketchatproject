@@ -2,10 +2,31 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { getUserById } from '../../services/apiService'
 
-const AllPost = () => {
+const AllPost = ({postid}) => {
   const[details,setDetails]=useState([])
   const[data,setData]=useState({})
   const [showComments, setShowComments] = useState(false);
+  const [commentText, setCommentText] = useState('');
+
+const commentFunction=(e)=>{
+  setCommentText(e.target.value)
+}
+  const handleCommentSubmit = async (postid) => {
+    try {
+      const userid=localStorage.getItem("id")
+      if(!userid){
+        console.log('user not found');
+        return
+      }
+      let response=await axios.post("http://localhost:5000/api/posts/comment",{userid,text:commentText,postid})
+      console.log(response,'commentresponse');
+    } catch (error) {
+      console.log(error.message);
+      
+    }
+  }
+   
+ 
 
 
   const toggleComments = () => {
@@ -34,7 +55,6 @@ const AllPost = () => {
   }
 
 
-
   useEffect(()=>{
     getAllPosts()
     fetchData()
@@ -44,13 +64,15 @@ const AllPost = () => {
      <div>
       {
         details.map((items)=>{
+          console.log(items.message,'itemshen');
+          
           return(
             <div  className="max-w-xl mx-auto bg-white p-6 rounded-md shadow-md mt-8">
         <div className="flex items-center mb-4">
-          <img src={`http://localhost:5000/uploads/${items.userId.image}`} alt="Profile Image" className="w-10 h-10 rounded-full mr-4" />
+          <img src={`http://localhost:5000/uploads/${items.profilePic}`} alt="Profile Image" className="w-10 h-10 rounded-full mr-4" />
           
           <div>
-            <h2 className="text-lg font-semibold">{items.userId.username}</h2>
+            <h2 className="text-lg font-semibold">{items.username}</h2>
             <p className="text-gray-600">Posted on {new Date(items.createdAt).toLocaleDateString()}</p>
           </div>
         </div>
@@ -74,7 +96,7 @@ const AllPost = () => {
               {/* <svg className="w-4 h-4 fill-current text-green-500" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm4 0h-2v-6h2v6z" />
               </svg> */}
-              <span onClick={toggleComments}><i class="fa-regular fa-comment"></i>Comment 0</span>
+              <span onClick={toggleComments}><i class="fa-regular fa-comment"></i>Comment {items.comments.length}</span>
             </div>
             <div className="mr-4 flex items-center space-x-2 ">
               {/* <svg className="w-4 h-4 fill-current text-red-500" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -92,13 +114,45 @@ const AllPost = () => {
 
         {showComments && (
           <div className="comments-section border-t border-gray-200 pt-4">
-            <h3 className="text-lg font-semibold mb-2">Comments</h3>
-            <div className="comment mb-4">
-              <p className="font-semibold">Commenter Name</p>
-              <p>This is a comment on the user post. It can contain text and additional information.</p>
-            </div>
-            {/* More comments can be added here */}
+
+      {
+        items.comments.map((item)=>{
+          return( <>
+          
+          <p>By :{item.username}</p>
+          <p>{item.text}</p>
+          
+          
+          </>)
+        })
+      }        
+
+
+<br />
+<br />
+
+      <input
+        type='text'
+        placeholder='Add a comment'
+        value={commentText}
+        onChange={commentFunction}
+      />
+
+      
+      <button type='submit' onClick={()=>handleCommentSubmit(items._id)} style={{backgroundColor:"red"}}>post</button>
+    
+
+
+
           </div>
+
+
+          
+
+
+
+
+        
         )}
       </div>
           )

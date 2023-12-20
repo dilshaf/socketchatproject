@@ -44,16 +44,24 @@ const postSchema= new Schema(
             },
           ],
 
-
-          comments:[
+          comments: [
             {
-                type:String,
-                userId:{
-                    type:Schema.Types.ObjectId,
-                    ref:'mediareglog'
-                }
-            }
-          ]
+              text:String,
+              userid:String
+
+            },
+          ],
+
+
+        //   comments:[
+        //     {
+        //         type:String,
+        //         userId:{
+        //             type:Schema.Types.ObjectId,
+        //             ref:'mediareglog'
+        //         }
+        //     }
+        //   ]
 
     },{timestamps:true}
 )

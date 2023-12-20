@@ -1,7 +1,7 @@
 import express from 'express'
 // import {getFeedPosts,getUserPosts,likePost} from '../controllers/posts.js'
 import { verifyToken } from '../middlewares/authMiddleware.js'
-import { commentPost, createPost,disLike,getAllPost,getPost, likePost  } from '../controllers/postController.js'
+import {  createPost,getAllPost,getPost, likePost, postComment  } from '../controllers/postController.js'
 import multer from 'multer'
 import path from 'path'
 
@@ -26,6 +26,8 @@ Postrouter.get('/get/:id',getPost)
 Postrouter.get('/get',getAllPost)
 
 
+
+Postrouter.post('/comment',postComment)
 // LIKES
 Postrouter.post("/like",likePost)
 
@@ -36,7 +38,7 @@ Postrouter.post("/like",likePost)
 
 //UPDATE
 // Postrouter.put('/:id/like',verifyToken,likePost)
-Postrouter.put('/:id/comment',verifyToken,commentPost)
+// Postrouter.put('/:id/comment',verifyToken,commentPost)
 
 
 export default Postrouter
