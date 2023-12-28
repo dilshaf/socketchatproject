@@ -70,7 +70,7 @@ export default function Example() {
     data.append("password", formData.password);
     data.append("image", formData.image);
     // console.log(formData.image,'poiuyt');
-    console.log(data, "data");
+    
 
     try {
       const response = await axios.post(

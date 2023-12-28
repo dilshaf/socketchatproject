@@ -92,7 +92,25 @@ export const register = async (req, res) => {
     const { id } = req.params
     try {
       let getUser=await Admin.findById(id)
-      res.status(201).json(getUser)
+    const {...others}=getUser._doc
+    let user=getUser.friends.map(async(item)=>{   //item =ids of frndz
+      
+      
+      let getUserr=await Admin.findById(item)   //friendsnte details full
+      
+
+      let {...others}=getUserr._doc
+
+    
+      return others
+
+
+      
+    })
+    const result=await Promise.all(user)    //login cheytha usernte details
+    others.followers=result 
+
+      res.status(201).json(others)
       // console.log(getUser,"res");
     } catch (error) {
       res.status(404).json({message:error.message || null});

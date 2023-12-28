@@ -13,6 +13,7 @@ const Search = () => {
   const [formData, setFormData] = useState({
     description: "",
     image:null,
+    privacy: "public",
   
   });
   const [details,setDetails]=useState({})
@@ -67,6 +68,7 @@ const Search = () => {
     data.append("description", formData.description);
     data.append("image", formData.image);
     data.append("userId", localStorage.getItem("id"));
+    data.append("privacy", formData.privacy); 
     // data.append("username",formData.username)
   
     console.log(data, 'dataaaaaaaaaaaa'); // Log the 'data' variable instead of 'formData'
@@ -77,7 +79,7 @@ const Search = () => {
       if (response && response.data) {
         successToast("success");
         // setRefresh(!refresh)
-        description('')
+        // description('')
         // username('')
       
       } else {
@@ -161,6 +163,25 @@ const Search = () => {
                 onChange={handleInputChange}
               />
             </div>
+
+<div>
+
+            <input
+  name="privacy"
+  type="text"
+  required
+  className="block w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+  value={formData.privacy}
+  onChange={handleInputChange}
+  placeholder="Public or Private"
+/>
+</div>
+
+
+
+
+
+
           </div>
         </div>
 
@@ -175,6 +196,7 @@ const Search = () => {
 
           <div>
           <Button as="input" type="submit" value="Post" />
+          {/* <button type="button" as="input"  value="Post" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-lg shadow-purple-500/50 dark:shadow-lg dark:shadow-purple-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Share</button> */}
           </div>
         </div>
       </form>

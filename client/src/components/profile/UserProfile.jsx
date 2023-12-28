@@ -1,24 +1,48 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardTitle, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn } from 'mdb-react-ui-kit';
 import Searchsession from './Searchsession';
 import FriendsList from './FriendsList';
 import axios from 'axios'
 import { getUserById } from '../../services/apiService';
+import { AuthContext } from '../../context/AuthContext';
+
+
 
 export default function Basic() {
+
+  // refreshUseEffectMethod
+
+  const {refresh} = useContext(AuthContext)
+  const { selectedPost } = useContext(AuthContext);
+
+  // console.log(value,'value');
  
   
   const [data,setData] = useState({})
 
-  const fetchData = async()=>{
-    const response = await getUserById()
-    setData(response)
-    console.log(response,'responseeeeeeeeeee');
-  }
+  const fetchData = async () => {
+    let response;
 
-  useEffect(()=>{
-    fetchData()
-  },[])
+    if (selectedPost) {
+      // Use the selectedPost data if available
+      response = selectedPost;
+      console.log(response,'selectedpost');
+    } else {
+      // Fetch user data if selectedPost is not available
+      try {
+        response = await getUserById();
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+
+    setData(response);
+    console.log(response, 'responseeeeeeeeeee');
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [refresh, selectedPost]);
 
 
  
@@ -38,7 +62,7 @@ export default function Basic() {
                     <MDBCardImage
                       style={{ width: '180px', borderRadius: '10px' }}
                       
-                      src={`http://localhost:5000/uploads/${data.image}`}
+                      src={`http://localhost:5000/uploads/${data.profilepic || data.image}`}
                       
                     
                       alt='Generic placeholder image'
@@ -58,7 +82,8 @@ export default function Basic() {
                       </div>
                       <div className="px-3">
                         <p className="small text-muted mb-1">Followers</p>
-                        <p className="mb-0">976</p>
+                        {selectedPost ? <p className="mb-0">{data.friends?.length}</p> : <p className="mb-0">{data.followers?.length}</p>}
+                        
                       </div>
                       <div>
                         <p className="small text-muted mb-1">Rating</p>
@@ -69,6 +94,7 @@ export default function Basic() {
                       <MDBBtn outline className="me-1 flex-grow-1">Chat</MDBBtn>
                       <MDBBtn className="flex-grow-1">Follow</MDBBtn>
                     </div>
+                    
                   </div>
                 </div>
               </MDBCardBody>
@@ -83,7 +109,7 @@ export default function Basic() {
       </div>
 
       <div>
-        <FriendsList/>
+        <FriendsList followers={data.followers}/>
       </div>
 
     </div>

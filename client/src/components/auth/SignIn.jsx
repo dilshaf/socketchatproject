@@ -17,13 +17,13 @@ export default function Example() {
   const handleSubmitData = async (e) => {
     e.preventDefault();
 
-    console.log(email, password);
+   
     try {
       const response = await axios.post(
         "http://localhost:5000/api/admin/login",
         formdata
       );
-      // console.log(response, "ress");
+     
       if (response.data) {
         const { result, token } = response.data;
 

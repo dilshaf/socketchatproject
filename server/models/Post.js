@@ -32,10 +32,15 @@ const postSchema= new Schema(
             type:String,
             required:true
         },
+        email:{
+            type:String,
+        
+        },
         image:{
             type:String,
             required:true
         },
+       
        
         likes: [
             {
@@ -51,7 +56,15 @@ const postSchema= new Schema(
 
             },
           ],
+          privacy: {
+            type: String,
+            required: true,
+          },
 
+         
+    // friends: {
+    //   type:Array,
+    // }
 
         //   comments:[
         //     {

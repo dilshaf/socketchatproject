@@ -1,27 +1,46 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 import Settings from "../profile/Settings/Settings";
+import './Header.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 
-const Navbar = ({element}) => {
+const Navbar = ({element,toggleDarkMode,darkMode}) => {
   const [open, setOpen] = useState(false);
 
+ 
+
+
+
   return (
-    <header className={`flex w-full items-center bg-white dark:bg-dark`}>
+    <header className={`flex w-full items-center `}>
       <div className="container">
         <div className="relative -mx-4 flex items-center justify-between">
           <div className="w-60 max-w-full px-4">
-            <a href="/#" className="block w-full py-5">
-              <img
+            <div className="block w-full py-5">
+              {/* <img
                 src="https://cdn.tailgrids.com/2.0/image/assets/images/logo/logo-primary.svg"
                 alt="logo"
                 className="dark:hidden"
-              />
-              <img
+              /> */}
+              {/* <p className="insta">iຖŞtคງrค๓</p> */}
+              <h1
+  className="text-4xl font-bold text-transparent bg-clip-text text-decoration-none"
+  style={{
+    marginLeft: "-2rem",
+    backgroundImage: 'linear-gradient(to right, #800080, #0000FF)',
+    WebkitBackgroundClip: 'text',
+    color: 'transparent'
+  }}
+>
+  𝓲𝓷𝓼𝓽𝓪𝓰𝓻𝓪𝓶
+</h1>
+              {/* <img
                 src="https://cdn.tailgrids.com/2.0/image/assets/images/logo/logo-white.svg"
                 alt="logo"
                 className="hidden dark:block"
-              />
-            </a>
+              /> */}
+           </div>
           </div>
           <div className="flex w-full items-center justify-between px-4">
             <div>
@@ -60,22 +79,40 @@ const Navbar = ({element}) => {
                 </ul>
               </nav>
             </div>
-            <div className="hidden justify-end pr-16 sm:flex lg:pr-0">
+            <div className="hidden justify-end pr-16 sm:flex lg:pr-0" style={{marginTop:"-1rem"}}>
               <a
                 href="/#"
-                className="px-7 py-3 text-base font-medium text-dark hover:text-primary dark:text-white text-decoration-none "
-              >
+                className="px-7 py-3 text-base font-medium  hover:text-primary dark:text-white text-decoration-none "
+                style={{
+                  backgroundImage: 'linear-gradient(to right, #800080, #0000FF)',
+                  WebkitBackgroundClip: 'text',
+                  color: 'transparent'
+                }}>
                 Sign out
               </a>
               <Link to={'settings'}>
 
               <button
                 
-                className="rounded-md bg-primary px-7 py-3 text-base font-medium text-white hover:bg-primary/90 text-decoration-none "
-              >
+                className="rounded-md  px-7 py-3 text-base font-medium text-white  text-decoration-none "
+              style={{backgroundColor:"purple"}}>
                 Settings
               </button>
               </Link>
+
+
+
+
+              <button onClick={toggleDarkMode} style={{marginLeft:"2rem"}}>
+              {darkMode ? <FontAwesomeIcon icon={faSun}  className="fa-2x" /> : <FontAwesomeIcon icon={faMoon}  className="fa-2x"/>}
+            </button>
+
+
+      
+
+
+
+              
             </div>
           </div>
         </div>
@@ -93,10 +130,23 @@ const ListItem = ({ children, NavLink }) => {
         <a
          
           className="flex py-2 text-base font-medium text-body-color hover:text-dark dark:text-dark-6 dark:hover:text-white lg:ml-12 lg:inline-flex text-decoration-none "
-        >
-          {children}
+       
+          style={{
+            backgroundImage: 'linear-gradient(to right, #800080, #0000FF)',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent'
+          }}>{children}
         </a>
+
+
       </li>
+
+
+
+
+
+
+      
     </>
   );
 };

@@ -4,7 +4,7 @@ import Admin from "../models/User.js";
 export const createPost = async (req, res) => {
 
     try {
-        const {description,userId}=req.body
+        const {description,userId,privacy}=req.body
         const images=req.file
         console.log(req.body,'body');
         if(!description){
@@ -18,9 +18,12 @@ export const createPost = async (req, res) => {
     if(!userId){
         return res.status(400).json({message:"id not defined"})
     }
+    if (!privacy) {
+      return res.status(400).json({ message: "Privacy setting is required" });
+    }
     const image=req.file.filename
     
-    const newAdmin = new Post({ description,image:image,userId });
+    const newAdmin = new Post({ description,image:image,userId,privacy });
     console.log(newAdmin,'admin');
     const savedAdmin = await newAdmin.save();
     res.status(200).json(savedAdmin);
@@ -123,10 +126,11 @@ export const disLike=async(req,res)=>{
 }
 
 export const postComment = async (req, res) => {
-    const { userid, postid, text,username } = req.body;
+    const { userid, postid, text,username,image } = req.body;
   
     try {
       const post = await Post.findById(postid);
+     
   
       if (!post) {
         return res.status(404).json({ error: 'Post not found' });
@@ -135,7 +139,7 @@ export const postComment = async (req, res) => {
     
   
       
-      post.comments.push({ userid, text,username });
+      post.comments.push({ userid, text,username,image });
      let response = await post.save();
   
       res.json({ message: response, status:true });
@@ -144,6 +148,7 @@ export const postComment = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   };
+  
   
 
 export const getPost=async(req,res)=>{
@@ -175,103 +180,300 @@ export const getPost=async(req,res)=>{
     }
 }
 
+export const updateComment = async (req, res) => {
+  const { postid, commentid, text } = req.body;
 
-export const getAllPost=async(req,res)=>{
-    try {
-       let response=await Post.find()
+  const { id  } = req.params
 
-    //   response.map(async(post)=>{
-    //     // get the post
+  console.log(postid,commentid,text,'reqody');
+ 
 
-    //     post.comments.map((comment)=>{
-    //         console.log(comment,'comment')
-    //     })
+  try {
+    // const post = await Post.findById(postid);
+    // console.log(post,'post');
 
-    //    let res = await post.comments
-       
     
-    //    console.log(res,'resss')
+
+    // if (!post) {
+    //   return res.status(404).json({ error: 'Post not found' });
     // }
 
+    // const commentToUpdate = post.comments.id(commentid);
+// console.log(commentToUpdate,'commntupdatae');
+// return true
+    // if (!commentToUpdate) {
+    //   return res.status(404).json({ error: 'Comment not found' });
+    // }
+
+   
+    // commentToUpdate.text = text;
+
+    
+    const updatedPost = await Post.findByIdAndUpdate(postid, {
+      $set: {
+        'comments.$[elem].text': text,
+        'comments.$[elem].userid': id,
+      },
+    }, {
+      new: true,
+      arrayFilters: [{ 'elem._id': commentid }],
+    });
+    console.log(updatedPost, 'updatepost');
+    
+
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+// export const getAllPost=async(req,res)=>{
+//     try {
+//        let response=await Post.find()
+
+//     //   response.map(async(post)=>{
+//     //     // get the post
+
+//     //     post.comments.map((comment)=>{
+//     //         console.log(comment,'comment')
+//     //     })
+
+//     //    let res = await post.comments
+       
+    
+//     //    console.log(res,'resss')
+//     // }
+
        
        
-    //    )
-    //    .map(async(item)=>{
-    //     // get the comments
-    //      let responseForCommentWithUserData =  await Promise.all(item.map(async(comment)=>{
-    //         // get the command
-    //         const {...other } = comment._doc
+//     //    )
+//     //    .map(async(item)=>{
+//     //     // get the comments
+//     //      let responseForCommentWithUserData =  await Promise.all(item.map(async(comment)=>{
+//     //         // get the command
+//     //         const {...other } = comment._doc
 
-    //         const user = await Admin.findById(comment.userid);
+//     //         const user = await Admin.findById(comment.userid);
 
-    //         const { username,image,...others } = user._doc
+//     //         const { username,image,...others } = user._doc
 
-    //         other.username = username
-    //         other.image = image
+//     //         other.username = username
+//     //         other.image = image
 
-    //         return other
+//     //         return other
 
-    //     }
+//     //     }
         
         
-    //     ))
-    //      return responseForCommentWithUserData
-    // })
+//     //     ))
+//     //      return responseForCommentWithUserData
+//     // })
 
 
 
-    let rrr = await Promise.all( response.map(async(post)=>{
-      console.log(post,'post you');
+//     let rrr = await Promise.all( response.map(async(post)=>{
+//       console.log(post,'post you');
 
-        const {comments,...others} = post._doc
-        // get one post
-        console.log(others,'posts');
+//         const {comments,...others} = post._doc
+//         // get one post
+//         console.log(others,'posts');
 
-        const user = await Admin.findById(post.userId);
+//         const user = await Admin.findById(post.userId);
 
 
 
-       let r =  await Promise.all( post.comments.map(async(comment)=>{
-            // get the comment
+//        let r =  await Promise.all( post.comments.map(async(comment)=>{
+//             // get the comment
           
-            const {...other } = comment._doc
+//             const {...other } = comment._doc
 
-            const user = await Admin.findById(comment.userid);
+//             const user = await Admin.findById(comment.userid);
+// console.log(user,'userkaanan');
+//             const { username,image,...others } = user._doc
+            
 
-            const { username,image,...others } = user._doc
+//             other.username = username
+//             other.image = image    //dp
 
-            other.username = username
-            other.image = image
+//             return other
+//         }))
 
-            return other
-        }))
-
-        console.log(r,'get the comment and user name')
-        console.log(others,'othessssssssssssssssssss');
-
-
-         others.comments = r
-         others.username =  user.username; 
-         others.profilePic =  user.image; 
-
-         return others
+//         console.log(r,'get the comment and user name')
+//         console.log(others,'othessssssssssssssssssss');
 
 
-    }))
+//          others.comments = r
+//          others.username =  user.username; 
+//          others.profilepic =  user.image; 
+
+         
+
+//          return others
+
+
+//     }))
 
 
 
 
-    // console.log(rrr,'response');
+//     // console.log(rrr,'response');
 
        
-    //    return true
-       res.status(201).json(rrr)
+//     //    return true
+//        res.status(201).json(rrr)
 
-    } catch (error) {
-        res.status(401).json({message:error.message})
+//     } catch (error) {
+//         res.status(401).json({message:error.message})
         
-    }
+//     }
+// }
+
+
+export const getAllPost = async (req, res) => {
+  try {
+    let response = await Post.find();
+
+    let rrr = await Promise.all(response.map(async (post) => {
+      const { comments, ...others } = post._doc;
+      const user = await Admin.findById(post.userId);
+
+      if (!user) {
+        // Handle the case when the user is not found
+        return null;
+      }
+
+      let r = await Promise.all(post.comments.map(async (comment) => {
+        const { ...other } = comment._doc;
+        const user = await Admin.findById(comment.userid);
+
+        if (!user) {
+          // Handle the case when the user for the comment is not found
+          return null;
+        }
+
+        const { username, image, ...others } = user._doc;
+
+        other.username = username;
+        other.image = image;
+
+        return other;
+      }));
+
+      // Filter out null values (users or comments not found)
+      r = r.filter((item) => item !== null);
+
+      others.comments = r;
+      others.username = user.username;
+      others.profilepic = user.image;
+
+      return others;
+    }));
+
+    // Filter out null values (users or posts not found)
+    rrr = rrr.filter((item) => item !== null);
+
+    res.status(201).json(rrr);
+  } catch (error) {
+    res.status(401).json({ message: error.message });
+  }
+};
+
+
+export const addFriend=async(req,res)=>{
+
+  
+  const { userId,friendId } = req.body;
+  console.log(userId,'userId');
+  console.log(friendId,'frndId');
+
+  
+
+  if(userId===friendId){
+    res.status(400).json({message:"samu users"})
+  }
+
+  const currentUser = await Admin.findById(userId);
+  console.log(currentUser,'currentuser');
+
+  
+  
+
+  if (!currentUser) {
+    return res.status(404).json({ error: 'User not found ' });
+  }
+  try{
+  const existingfollow=currentUser.friends.includes(friendId);
+
+
+  if (existingfollow) {
+
+    currentUser.friends.pull(friendId)
+  await currentUser.save()
+
+     res.status(201).json({message:"pull"})
+  }else{
+
+    currentUser.friends.push(friendId);
+    
+     res.status(201).json({message:"added"})
+  }
+  await currentUser.save()
+}catch(error){
+  console.log(error.message);
+}
+   
+  
+
+}
+
+
+export const getUser=async(req,res)=>{
+  const {id} =req.params
+  try {
+    let getUser=await Admin.findById(id)  //login cheytha usernte details
+
+
+    
+
+    const {...others}=getUser._doc
+
+  
+
+    let user=getUser.friends.map(async(item)=>{   //item =ids of frndz
+      
+      
+      let getUserr=await Admin.findById(item)   //friendsnte details full
+      
+
+      let {...others}=getUserr._doc
+
+    
+      return others
+
+
+      
+    })
+
+
+
+
+    const result=await Promise.all(user)    //login cheytha usernte details
+
+    console.log(others,'others');
+
+    // return true
+    
+    others.followers=result 
+
+   
+    
+    res.status(201).json(others)
+  } catch (error) {
+    console.log(error.message);
+    
+  }
 }
 
 
@@ -285,31 +487,29 @@ export const getAllPost=async(req,res)=>{
 
 
 
+export const share=async(req,res)=>{
+const {postid}=req.body
+  try {
+    
+    const post = await Post.findById(postid);
+  
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+  
+    res.status(201).json(post)
+  } catch (error) {
+    res.status(401).json({message:error.message})
+  }
+}
 
 
 
 
-// export const commentPost=async(req,res)=>{
-//     try {
-//         const {id}=req.params
-//         const {userId}=req.body
-//         const post=await Post.findById(id)
-//         const isComment=post.comments.get(userId)
 
-//         if(isComment){
-//             post.comments.delete(userId)
-//         }else{
-//             post.comments.set(userId,true)
-//         }
 
-//         const updatedPost=await Post.findByIdAndUpdate(id,{comments:post.comments},{new:true})
-//         res.status(201).json(updatedPost)
-        
-//     } catch (error) {
-//         res.status(404).json({message:error.message || null});
-        
-//     }
-// }
+
+
 
 
 

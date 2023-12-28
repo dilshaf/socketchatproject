@@ -4,3 +4,14 @@
     justify-content: space-between;
     
 }
+
+
+.dark-mode .div1 {
+    /* Add dark mode styles for div1 */
+  }
+  
+  .dark-mode {
+    background-color:black;
+    color: #fff;
+    /* Add other dark mode styles */
+  }

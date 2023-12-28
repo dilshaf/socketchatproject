@@ -8,6 +8,7 @@ const PostSession = () => {
   
   return (
     <div>
+      
         <div className="post-container">
     <div className="post-header">
       <img className="post-avatar" src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="User Avatar"/>

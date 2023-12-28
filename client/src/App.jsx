@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 
 // import AppRouter from './routes/AppRouter'
 // import { AuthContext } from './context/AuthContext'
@@ -11,9 +11,13 @@ import Settings from "./components/profile/Settings/Settings";
 import CommentSection from "./components/profile/CommentSection";
 import Posts from "./components/profile/posts/Posts";
 import AllPost from "./components/profile/AllPost";
+import Share from "./components/profile/Share";
 
 const App = () => {
+  const[details,setDetails]=useState([])
+ 
   return (
+    <>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<SignIn />} />
@@ -34,11 +38,17 @@ const App = () => {
           <Route path="comments" element={<><Search/><CommentSection /></>} />
 
           <Route path="posts" element={<Posts />} />
-          <Route index path="allpost" element={<AllPost />} />
+          <Route index path="allpost" element={<AllPost details={details}/>} />
+          <Route path="share" element={<Share/>}/>
 
         </Route>
       </Routes>
     </BrowserRouter>
+
+
+
+
+</>
   );
 };
 

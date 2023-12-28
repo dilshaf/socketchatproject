@@ -23,7 +23,14 @@ const reglogSchema = new Schema({
     image:{
         type:String,
         required:true
-    }
+    },
+    friends:{
+        type:Array,
+        default:[],
+    },
+
+
+    
 },{ timestamps: true })
 
 const Admin = model("mediareglog", reglogSchema);

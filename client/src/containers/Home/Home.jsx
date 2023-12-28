@@ -9,6 +9,7 @@ import Protected from './Protected';
 const Home = () => {
   const [isLogged, setIsLogged] = useState(false);
   
+  
   let navigate = useNavigate();
 
   const token =localStorage.getItem('token');
@@ -51,6 +52,9 @@ const Home = () => {
       {/* <Header /> */}
       {isLogged ? <Protected element={<Outlet/>} /> : navigate("/") }
       {console.log(isLogged, 'isLogged')}
+
+
+     
     </div>
   );
 };
