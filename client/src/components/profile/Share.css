@@ -1,0 +1,28 @@
+/* Share.css */
+.share-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-size: cover; /* Adjust as needed */
+    background-position: center;
+    background-image: url('https://img.freepik.com/premium-vector/flat-illustration-social-media-day-celebration_52683-113069.jpg?size=626&ext=jpg&ga=GA1.1.708491610.1695062581&semt=ais');
+  }
+  
+  .share-box {
+    display: flex;
+    gap: 118px;
+    justify-content: center; /* Adjust as needed to add spacing between icons */
+    padding: 20px;
+  
+
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    
+    background-color: #fff;
+    width: 100%; /* Set width to 100% */
+    height: 50%; /* Set height to 50% */
+  }
+  
+  /* Add additional styling as needed */
+  

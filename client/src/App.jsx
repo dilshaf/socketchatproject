@@ -21,6 +21,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<SignIn />} />
+        <Route path="/share/:id" element={<Share/>}/>
         <Route path="/register" element={<SignUp />} />
 
         <Route path="/home" element={<Home />}>
@@ -39,7 +40,7 @@ const App = () => {
 
           <Route path="posts" element={<Posts />} />
           <Route index path="allpost" element={<AllPost details={details}/>} />
-          <Route path="share" element={<Share/>}/>
+         
 
         </Route>
       </Routes>

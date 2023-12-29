@@ -1,4 +1,4 @@
-import React,{useState,useEffect, useRef} from "react";
+import React,{useState,useEffect, useRef, useContext} from "react";
 import "./Search.css";
 import PostSession from "./PostSession";
 import Postemp from "./Postemp";
@@ -7,9 +7,12 @@ import axios from "axios";
 import {successToast,errorToast} from '../../Toastify/Toast'
 import { getUserById } from "../../services/apiService";
 
+
 const Search = () => {
 
   const cameraBtn = useRef()
+  
+ 
   const [formData, setFormData] = useState({
     description: "",
     image:null,
@@ -17,7 +20,10 @@ const Search = () => {
   
   });
   const [details,setDetails]=useState({})
-  const [refresh,setRefresh]=useState(false)
+  const [privacy, setPrivacy] = useState('public');
+  const [refresh, setRefresh] = useState(false);
+  
+  const [isToggled, setToggled] = useState(false);
   console.log(formData,'ddd');
 
   const handleInputChange = (e) => {
@@ -68,7 +74,7 @@ const Search = () => {
     data.append("description", formData.description);
     data.append("image", formData.image);
     data.append("userId", localStorage.getItem("id"));
-    data.append("privacy", formData.privacy); 
+    data.append("privacy", isToggled ? "public" : "private");
     // data.append("username",formData.username)
   
     console.log(data, 'dataaaaaaaaaaaa'); // Log the 'data' variable instead of 'formData'
@@ -77,8 +83,12 @@ const Search = () => {
   
       console.log(response, "responsekkijsjbj");
       if (response && response.data) {
-        successToast("success");
-        // setRefresh(!refresh)
+        successToast("successfully Posted");
+        setRefresh((prevRefresh) => !prevRefresh);
+        setFormData({
+          description: "",
+          
+        });
         // description('')
         // username('')
       
@@ -89,6 +99,16 @@ const Search = () => {
       console.log(error.response?.data?.message || "An error occurred");
       errorToast(error.response?.data?.message || "An error occurred");
     }
+  };
+
+  const handleClickToggle = (event) => {
+    setPrivacy(event.target.value);
+    setToggled(!isToggled);
+    const toastMessage = isToggled
+    ? 'Toggle button set to private successfully!'
+    : 'Toggle button set to public successfully!';
+
+  successToast(toastMessage);
   };
 
   const fetchData = async()=>{
@@ -164,20 +184,26 @@ const Search = () => {
               />
             </div>
 
-<div>
+{/* <div>
 
             <input
   name="privacy"
   type="text"
   required
   className="block w-full rounded-md border-2 border-gray-300 py-2 px-3 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-  value={formData.privacy}
+  // value={formData.privacy}
   onChange={handleInputChange}
-  placeholder="Public or Private"
+  placeholder="You can choose post is private or public"
 />
-</div>
+</div> */}
 
 
+<select name="" id="" onChange={handleClickToggle} value={isToggled ? "public" : "private"} style={{marginLeft:"28rem",
+    backgroundColor: "antiquewhite"}}>
+      
+        <option value="public">Public</option>
+        <option value="private">Private</option>
+      </select>
 
 
 
@@ -202,7 +228,7 @@ const Search = () => {
       </form>
 
       {/* <PostSession/> */}
-      <Postemp />
+      <Postemp refresh={refresh}/>
     </div>
   );
 };

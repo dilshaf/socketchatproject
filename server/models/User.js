@@ -28,6 +28,10 @@ const reglogSchema = new Schema({
         type:Array,
         default:[],
     },
+    privacy: {
+        type: Boolean,
+        default: true, 
+    },
 
 
     

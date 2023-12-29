@@ -13,7 +13,7 @@ const Navbar = ({element,toggleDarkMode,darkMode}) => {
 
 
   return (
-    <header className={`flex w-full items-center `}>
+    <header className={`flex w-full items-center `} style={{backgroundColor:"cornsilk"}}>
       <div className="container">
         <div className="relative -mx-4 flex items-center justify-between">
           <div className="w-60 max-w-full px-4">
@@ -28,12 +28,13 @@ const Navbar = ({element,toggleDarkMode,darkMode}) => {
   className="text-4xl font-bold text-transparent bg-clip-text text-decoration-none"
   style={{
     marginLeft: "-2rem",
-    backgroundImage: 'linear-gradient(to right, #800080, #0000FF)',
+    backgroundImage: 'linear-gradient(to right, orange, darkorange)', // Updated gradient colors
     WebkitBackgroundClip: 'text',
     color: 'transparent'
   }}
 >
   𝓲𝓷𝓼𝓽𝓪𝓰𝓻𝓪𝓶
+
 </h1>
               {/* <img
                 src="https://cdn.tailgrids.com/2.0/image/assets/images/logo/logo-white.svg"
@@ -84,7 +85,7 @@ const Navbar = ({element,toggleDarkMode,darkMode}) => {
                 href="/#"
                 className="px-7 py-3 text-base font-medium  hover:text-primary dark:text-white text-decoration-none "
                 style={{
-                  backgroundImage: 'linear-gradient(to right, #800080, #0000FF)',
+                  backgroundImage: 'linear-gradient(to right, orange, darkorange)',
                   WebkitBackgroundClip: 'text',
                   color: 'transparent'
                 }}>
@@ -95,7 +96,7 @@ const Navbar = ({element,toggleDarkMode,darkMode}) => {
               <button
                 
                 className="rounded-md  px-7 py-3 text-base font-medium text-white  text-decoration-none "
-              style={{backgroundColor:"purple"}}>
+              style={{backgroundColor:"orange",    boxShadow:"2px 2px 9px darkorange"}}>
                 Settings
               </button>
               </Link>
@@ -127,16 +128,16 @@ const ListItem = ({ children, NavLink }) => {
   return (
     <>
       <li>
-        <a
-         
-          className="flex py-2 text-base font-medium text-body-color hover:text-dark dark:text-dark-6 dark:hover:text-white lg:ml-12 lg:inline-flex text-decoration-none "
-       
-          style={{
-            backgroundImage: 'linear-gradient(to right, #800080, #0000FF)',
-            WebkitBackgroundClip: 'text',
-            color: 'transparent'
-          }}>{children}
-        </a>
+      <a
+  className="flex py-2 text-base font-medium text-body-color hover:text-dark dark:text-dark-6 dark:hover:text-white lg:ml-12 lg:inline-flex text-decoration-none"
+  style={{
+    backgroundImage: 'linear-gradient(to right, orange, darkorange)', // Updated gradient colors
+    WebkitBackgroundClip: 'text',
+    color: 'transparent'
+  }}
+>
+  {children}
+</a>
 
 
       </li>

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect, useContext } from 'react';
 import './Postemp.css'
 import axios from 'axios';
 import { getUserById } from '../../services/apiService';
@@ -7,18 +7,45 @@ import { successToast } from '../../Toastify/Toast';
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SendIcon from '@mui/icons-material/Send';
 import { WhatsappShareButton } from 'react-share';
+import { AuthContext } from '../../context/AuthContext';
 
 
-const UserPost = () => {
+const UserPost = ({refresh}) => {
   const [showComments, setShowComments] = useState(false);
+  
   const [data,setData]=useState([])
   const [details,setDetails]=useState({})
   const [commentText, setCommentText] = useState("");
+  const [privacy, setPrivacy] = useState('public');
+  const { refreshUseEffectMethod } = useContext(AuthContext)
+  // const [refresh, setRefresh] = useState(false);
   // let postId={_id}
 
- 
+
   
- 
+  const handlePrivacyChange = (event) => {
+    setPrivacy(event.target.value);
+  };
+  const handleUpdatePost = async (postid) => {
+    try {
+      const response = await axios.put(`http://localhost:5000/api/posts/put/${postid}`, {
+        privacy,
+        postid,
+      });
+
+      // Handle successful response, e.g., show a success message
+      console.log('Post updated successfully:', response.data);
+      
+      if (privacy === 'public') {
+        successToast('Post updated to public successfully!');
+      } else if (privacy === 'private') {
+        successToast('Post updated to private successfully!');
+      }
+    } catch (error) {
+      // Handle error, e.g., show an error message
+      console.error('Error updating post privacy:', error.message);
+    }
+  };
  
 console.log(data,"llllllllllllllllllllllllllllll");
   const toggleComments = () => {
@@ -41,6 +68,7 @@ console.log(data,"llllllllllllllllllllllllllllll");
       );
       console.log(response, "commentresponse");
       setRefresh(!refresh);
+      successToast("comment succesfully")
     } catch (error) {
       console.log(error.message);
     }
@@ -48,11 +76,14 @@ console.log(data,"llllllllllllllllllllllllllllll");
   const commentFunction = (e) => {
     setCommentText(e.target.value);
   };
+
+
   const getPost=async(req,res)=>{
     try {
       let response=await axios.get(`http://localhost:5000/api/posts/get/${localStorage.getItem("id")}`)
       console.log(response,"res");
       setData(response.data)
+      setRefresh(!refresh);
     } catch (error) {
       console.log(error.message);
       
@@ -62,6 +93,7 @@ console.log(data,"llllllllllllllllllllllllllllll");
   const fetchData = async()=>{
     const response = await getUserById()
     setDetails(response)
+    // setRefresh(!refresh);
     console.log(response,'responseeeeeeeeeee');
   }
 
@@ -72,8 +104,9 @@ console.log(data,"llllllllllllllllllllllllllllll");
   useEffect(()=>{
     getPost()
     fetchData()
+    
 
-   },[])
+   },[refresh])
 
 
    const likePost=async(postid)=>{
@@ -111,11 +144,11 @@ console.log(data,"llllllllllllllllllllllllllllll");
     <div>
       {
         data.map((items)=>{
-          console.log(items,'items');
+          console.log(items,'itemskanan');
           
           const shareUrl = `http://localhost:5000/api/posts/get/${localStorage.getItem("id")}`;
           console.log(shareUrl,'url');
-          const shareText = `Check out this post: ${items.description}`;;
+          // const shareText = `Check out this post: ${items.description}`;;
           return(
            
             <div  className="max-w-xl mx-auto bg-white p-6 rounded-md shadow-md mt-8">
@@ -127,10 +160,44 @@ console.log(data,"llllllllllllllllllllllllllllll");
             <p className="text-gray-600">Posted by fffff on December 8, 2023</p>
           </div>
           
+
+
+
+
+
+
+
+          <select
+        id="privacyDropdown"
+        value={privacy}
+        onChange={handlePrivacyChange}
+        onClick={()=>handleUpdatePost(items._id)}
+        style={{marginLeft: "9rem",
+          backgroundColor: "dodgerblue"}}
+      >
+        <option value="public">Public</option>
+        <option value="private">Private</option>
+        
+      </select>
+
+      {/* <button onClick={()=>handleUpdatePost(items._id)}>Update Post Privacy</button> */}
+
+
+
+
+
+
+
+
+
+
+
+
         </div>
         <img src={`http://localhost:5000/uploads/${items.image}`} alt="Post Image" className="mb-4 rounded-lg w-full" />
         <div className="mb-4">
           <p className="text-gray-800">{items.description}</p>
+          {/* <p>{items.privacy}</p> */}
         </div>
         <div className="flex justify-between items-center text-gray-600">
           <div className="flex items-center" style={{display:"contents"}}>
@@ -169,9 +236,11 @@ console.log(data,"llllllllllllllllllllllllllllll");
 <span>
                 {/* <Link to={`share/${items._id}`}>
                   <i className="fa-solid fa-share"></i> Share 0 */}
-              <Link to={`share/${items._id}`}><WhatsappShareButton url={shareUrl} title={shareText}  style={{color:"black"}}>
+              <Link to={`/share/${items._id}`} style={{textDecoration:" none",
+    color: "black"}}>
+          
               <i className="fa-solid fa-share"></i>  Share 0
-              </WhatsappShareButton>
+             
                 </Link>
               </span>
 

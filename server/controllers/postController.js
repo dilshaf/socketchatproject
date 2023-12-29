@@ -1,5 +1,7 @@
+import { mongo } from "mongoose";
 import Post from "../models/Post.js"
 import Admin from "../models/User.js";
+import mongoose from "mongoose";
 
 export const createPost = async (req, res) => {
 
@@ -22,8 +24,8 @@ export const createPost = async (req, res) => {
       return res.status(400).json({ message: "Privacy setting is required" });
     }
     const image=req.file.filename
-    
-    const newAdmin = new Post({ description,image:image,userId,privacy });
+    const isPublic = privacy === "public";
+    const newAdmin = new Post({ description,image:image,userId,privacy: isPublic });
     console.log(newAdmin,'admin');
     const savedAdmin = await newAdmin.save();
     res.status(200).json(savedAdmin);
@@ -35,7 +37,24 @@ export const createPost = async (req, res) => {
 }
 
 
+export const updatedPost=async(req,res)=>{
+ 
+  const { privacy,postid } = req.body;
 
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(
+      postid,
+      { privacy },
+      { new: true }
+    );
+    
+
+    res.json(updatedPost);
+  } catch (error) {
+    console.error('Error updating post privacy:', error.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
 
 
 // export const getUserPost=async(req,res)=>{
@@ -335,9 +354,12 @@ export const getAllPost = async (req, res) => {
   try {
     let response = await Post.find();
 
+    // console.log(response,'response')
+    
+
     let rrr = await Promise.all(response.map(async (post) => {
       const { comments, ...others } = post._doc;
-      const user = await Admin.findById(post.userId);
+      const user = await Admin.findOne({_id:new mongoose.Types.ObjectId(post.userId),privacy:true});
 
       if (!user) {
         // Handle the case when the user is not found
@@ -370,6 +392,9 @@ export const getAllPost = async (req, res) => {
 
       return others;
     }));
+
+
+    console.log(rrr,'ddd')
 
     // Filter out null values (users or posts not found)
     rrr = rrr.filter((item) => item !== null);

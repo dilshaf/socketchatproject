@@ -7,7 +7,7 @@ export const register = async (req, res) => {
 
 
     try {
-      const { username, email, password } = req.body;
+      const { username, email, password,privacy } = req.body;
       const images=req.file
 
       console.log(req.body,'body');
@@ -20,6 +20,7 @@ export const register = async (req, res) => {
         return res.status(400).json({ message: "Email is required" });
       }
 
+    
       if (!password) {
         return res.status(400).json({ message: "Password is required" });
       } else if (password.length < 8 || password.length > 16) {
@@ -31,16 +32,23 @@ export const register = async (req, res) => {
         return res.status(400).json({message:"Upload an image"})
     }
     const image=req.file.filename
-      
+    const isPublic = privacy === "public";
 
-
+//  let isPublic;
+//     if (privacy ==="public") {
+//       isPublic = true;
+//     } else if (privacy ==="private" ) {
+//       isPublic =false ;
+//     } else {
+//       return res.status(400).json({ message: "Invalid value for privacy" });
+//     }
 
 
       const saltRounds = 10;
   
       const salt = bcrypt.genSaltSync(saltRounds);
       const hash = bcrypt.hashSync(password, salt);
-      const newAdmin = new Admin({ username, email, password: hash,image:image });
+      const newAdmin = new Admin({ username, email, password: hash,image:image,privacy: isPublic});
       const savedAdmin = await newAdmin.save();
       res.status(200).json(savedAdmin);
     } catch (error) {
@@ -128,6 +136,46 @@ export const register = async (req, res) => {
     }
   
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+//edit
+
+
+  export const updatedPrivacy=async(req,res)=>{
+ 
+    // const { privacy,postid } = req.body;
+    console.log(req.body,'bodyyy')
+
+    let privacy = req.body.data === 'public' ? true : false 
+  // return true
+    try {
+      const updatedPost = await Admin.findByIdAndUpdate(req.body.postId,{ $set:{privacy:privacy} });
+      
+  
+      res.json(updatedPost);
+    } catch (error) {
+      console.error('Error updating post privacy:', error.message);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+
+
+
+
+
+
 
 
 

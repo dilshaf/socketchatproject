@@ -61,6 +61,11 @@ const postSchema= new Schema(
             required: true,
           },
 
+        // privacy: {
+        //     type: Boolean,
+        //     default: true, 
+        // },
+
          
     // friends: {
     //   type:Array,

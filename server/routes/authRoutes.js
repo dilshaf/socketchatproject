@@ -1,5 +1,5 @@
 import express from 'express'
-import {register,login, getUser, updateUser, getallData} from '../controllers/authController.js'
+import {register,login, getUser, updateUser, getallData, updatedPrivacy} from '../controllers/authController.js'
 import multer from 'multer'
 import path from 'path'
 
@@ -24,6 +24,7 @@ router.post('/login',login)
 router.get('/user/:id',getUser)
 router.put('/up/:id',upload.single('image'),updateUser)
 router.get("/getdata", getallData)
+router.put("/privacy", updatedPrivacy)
 
 
 

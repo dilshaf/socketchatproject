@@ -2,17 +2,19 @@ import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import { getUserById } from "../../../services/apiService";
 import {useParams} from 'react-router-dom'
-
+import './index.css'
 import axios from "axios";
 import { successToast } from "../../../Toastify/Toast";
 
 function Settings() {
   const [image, setImage] = useState("");
+  const [isToggled, setToggled] = useState(false);
   const [data, setData] = useState({
     username: "", 
     password: "",
     email: "",
     image: "",
+    privacy: "public",
   });
 
 
@@ -60,6 +62,7 @@ function Settings() {
     formData.append('email',data.email);
     formData.append('password',data.password);
     formData.append('image',image);
+    formData.append("privacy", isToggled ? "public" : "private");
     console.log(formData,'dddddddd');
     try {
       
@@ -72,7 +75,19 @@ function Settings() {
       console.error('Error updating user profile:', error.message);
     }
   };
-
+  const handleClickToggle = () => {
+    setToggled(!isToggled);
+  };
+//edit to userid
+  const handlePrivacy = async(postId,value)=>{
+    // alert(e.target.value)
+    if(value === '') return alert('plese click anyone')
+    try {
+      await axios.put('http://localhost:5000/api/admin/privacy',{postId,data:value})
+    } catch (error) {
+      
+    }
+  }
 
   return (
     <>
@@ -82,11 +97,11 @@ function Settings() {
             Update Your Profile
           </h3>
         </div>
-        <div className="">
-          <p>{data.email}</p>
-          <p>{data.username}</p>
-          <p>{data.password}</p>
-          <p>{data.image}</p>
+        <div className="styled-box">
+         <p>Email:{data.email}</p>
+          <p>Username:{data.username}</p>
+          {/* <p>{data.password}</p> */}
+          <p>Image:{data.image}</p>
         </div>
 
 
@@ -132,6 +147,22 @@ function Settings() {
               Email
             </label>
           </div>
+
+
+          {/* <select name="" id="" onChange={handleClickToggle} value={isToggled ? "public" : "private"}> */}
+          <select name="" id="" onChange={(e)=>handlePrivacy(data._id,e.target.value)}>
+            
+            <option value="">select</option>
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
+            {/* <p>sdfdf {}</p> */}
+        {/* <option value="public">Public</option> */}
+        {/* <option value="private">Private</option> */}
+      {/* </select> */}
+
+
+
           <div class="relative h-11 w-full min-w-[200px]">
             <input
               placeholder=""

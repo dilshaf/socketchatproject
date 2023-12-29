@@ -2,16 +2,18 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { getUserById } from "../../services/apiService";
 import { AuthContext } from "../../context/AuthContext";
-import {useParams} from 'react-router-dom'
+import {Link, useParams} from 'react-router-dom'
 
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SendIcon from '@mui/icons-material/Send';
+import { successToast } from "../../Toastify/Toast";
 
 const AllPost = ({ postid ,commentid}) => {
   const { refreshUseEffectMethod } = useContext(AuthContext);
-  const [refresh, setRefresh] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const { handlePostClick } = useContext(AuthContext);
   const [text, setText] = useState('');
+  
   
 
   const [details, setDetails] = useState([]);
@@ -67,7 +69,7 @@ const {id}=useParams()
       );
 
       console.log(response, "likeresponse");
-      // successToast(response.data.message);
+      successToast(response.data.message);
 
       getAllPosts();
     } catch (error) {
@@ -87,6 +89,7 @@ const {id}=useParams()
       );
       console.log(response, "commentresponse");
       setRefresh(!refresh);
+      successToast("comment succesfully")
     } catch (error) {
       console.log(error.message);
     }
@@ -112,22 +115,59 @@ const {id}=useParams()
     setShowComments(!showComments);
   };
 
+  // const getAllPosts = async () => {
+  //   try {
+  //     let response = await axios.get("http://localhost:5000/api/posts/get");
+  //     console.log(response, "getallpost");
+  //     const publicPosts = response.data.filter(post => post.privacy === "public");
+  //     setDetails(publicPosts);
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
+
+
+  // const getAllPosts = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:5000/api/posts/get");
+  //     console.log(response, "getallpost");
+  
+  //     if (response && response.data) {
+  //       const publicPosts = response.data.filter(post => post.privacy === "public");
+  //       setDetails(publicPosts);
+  //     } else {
+  //       console.error('Invalid response format:', response);
+  //     }
+  //   } catch (error) {
+  //     console.log(error.message);
+  //   }
+  // };
+
   const getAllPosts = async () => {
     try {
-      let response = await axios.get("http://localhost:5000/api/posts/get");
+      const response = await axios.get("http://localhost:5000/api/posts/get");
       console.log(response, "getallpost");
-      const publicPosts = response.data.filter(post => post.privacy === "public");
-      setDetails(publicPosts);
+  
+      if (response && response.data) {
+        const publicPosts = response.data.filter(post => post.privacy === "public");
+        setDetails(publicPosts);
+      } else {
+        console.error('Invalid response format:', response);
+      }
     } catch (error) {
       console.log(error.message);
     }
   };
+  
+  
 
   const fetchData = async () => {
     const response = await getUserById();
     setData(response);
     console.log(response, "responsegetdata");
   };
+
+
 
   const addFriend = async (friendId) => {
     console.log(friendId, "friendId");
@@ -146,7 +186,8 @@ const {id}=useParams()
           friendId,
         }
       );
-      refreshUseEffectMethod();
+      successToast(response.data.message)
+      setRefresh((prevRefresh) => !prevRefresh);
       console.log(response, "addfriendnteresponse");
     } catch (error) {
       console.log(error.message);
@@ -184,6 +225,15 @@ const {id}=useParams()
                     </p>
                     {/* <input type="text" value={friend} onChange={handleFriendChange} /> */}
                   </div>
+               
+
+
+
+
+
+
+
+
 
                   {items.userId !== localStorage.getItem("id") && (
                       
@@ -247,9 +297,28 @@ const {id}=useParams()
                     {/* <svg className="w-4 h-4 fill-current text-red-500" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm4 0h-2v-6h2v6z" />
               </svg> */}
-                    <span>
-                      <i class="fa-solid fa-share"></i>Share 0
-                    </span>
+
+
+
+
+<span>
+                {/* <Link to={`share/${items._id}`}>
+                  <i className="fa-solid fa-share"></i> Share 0 */}
+              <Link to={`/share/${items._id}`} style={{textDecoration:" none",
+    color: "black"}}>
+          
+              <i className="fa-solid fa-share"></i>  Share 0
+             
+                </Link>
+              </span>
+
+
+
+
+
+
+
+
                   </div>
                 </div>
                 {/* <div className="text-sm">

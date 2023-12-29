@@ -1,0 +1,17 @@
+.styled-box {
+    width: 282px; /* Adjust the width as needed */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the box shadow properties as needed */
+    border-radius: 8px; /* Optional: Add rounded corners */
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 2rem;
+    gap: 10px; /* Optional: Add margin as needed */
+}
+
+.styled-box p {
+    margin: 0;
+    border: 1px solid black;
+    box-shadow: 1px 1px 5px black /* Remove default paragraph margins */
+}

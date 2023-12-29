@@ -13,10 +13,23 @@ export default function Basic() {
   // refreshUseEffectMethod
 
   const {refresh} = useContext(AuthContext)
+  const [datas,setDatas]=useState([])
+  console.log(datas.length,'datas');
+
   const { selectedPost } = useContext(AuthContext);
 
   // console.log(value,'value');
- 
+  const getPost=async(req,res)=>{
+    try {
+      let response=await axios.get(`http://localhost:5000/api/posts/get/${localStorage.getItem("id")}`)
+      console.log(response,"res");
+      setDatas(response.data)
+      
+    } catch (error) {
+      console.log(error.message);
+      
+    }
+  }
   
   const [data,setData] = useState({})
 
@@ -42,15 +55,16 @@ export default function Basic() {
 
   useEffect(() => {
     fetchData();
+    getPost()
   }, [refresh, selectedPost]);
 
 
  
-
-
+  
+console.log(data,'postlength');
   
   return (
-    <div className="vh-100" style={{marginLeft: '-8rem'}}  >
+    <div className="vh-100" style={{marginLeft: '-4rem'}}  >
     
       <MDBContainer >
         <MDBRow className="justify-content-center" >
@@ -76,18 +90,18 @@ export default function Basic() {
 
                     <div className="d-flex justify-content-start rounded-3 p-2 mb-2"
                       style={{ backgroundColor: '#efefef' }}>
-                      <div>
+                      {/* <div>
                         <p className="small text-muted mb-1">Articles</p>
                         <p className="mb-0">41</p>
-                      </div>
+                      </div> */}
                       <div className="px-3">
-                        <p className="small text-muted mb-1">Followers</p>
+                        <p className="small text-muted mb-1" style={{marginLeft: "-1rem"}}>Following</p>
                         {selectedPost ? <p className="mb-0">{data.friends?.length}</p> : <p className="mb-0">{data.followers?.length}</p>}
                         
                       </div>
                       <div>
-                        <p className="small text-muted mb-1">Rating</p>
-                        <p className="mb-0">8.5</p>
+                        <p className="small text-muted mb-1">Post</p>
+                        <p className="mb-0">0{datas?.length}</p>
                       </div>
                     </div>
                     <div className="d-flex pt-1">
