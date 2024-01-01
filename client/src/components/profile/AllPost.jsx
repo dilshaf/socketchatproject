@@ -3,13 +3,15 @@ import React, { useContext, useEffect, useState } from "react";
 import { getUserById } from "../../services/apiService";
 import { AuthContext } from "../../context/AuthContext";
 import {Link, useParams} from 'react-router-dom'
-
+import './AllPost.css'
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SendIcon from '@mui/icons-material/Send';
 import { successToast } from "../../Toastify/Toast";
 
 const AllPost = ({ postid ,commentid}) => {
-  const { refreshUseEffectMethod } = useContext(AuthContext);
+  const { obj } = useContext(AuthContext);
+
+  // console.log(v,'vvvvv')
   const [refresh, setRefresh] = useState(false);
   const { handlePostClick } = useContext(AuthContext);
   const [text, setText] = useState('');
@@ -70,7 +72,7 @@ const {id}=useParams()
 
       console.log(response, "likeresponse");
       successToast(response.data.message);
-
+      setRefresh(!refresh)
       getAllPosts();
     } catch (error) {
       console.error("Error liking post:", error.message);
@@ -86,10 +88,11 @@ const {id}=useParams()
       let response = await axios.post(
         "http://localhost:5000/api/posts/comment",
         { userid, text: commentText, postid }
+
       );
       console.log(response, "commentresponse");
-      setRefresh(!refresh);
       successToast("comment succesfully")
+      setRefresh(!refresh);
     } catch (error) {
       console.log(error.message);
     }
@@ -113,6 +116,7 @@ const {id}=useParams()
 
   const toggleComments = () => {
     setShowComments(!showComments);
+    setRefresh(!refresh)
   };
 
   // const getAllPosts = async () => {
@@ -151,6 +155,7 @@ const {id}=useParams()
       if (response && response.data) {
         const publicPosts = response.data.filter(post => post.privacy === "public");
         setDetails(publicPosts);
+        // setRefresh(!refresh)
       } else {
         console.error('Invalid response format:', response);
       }
@@ -158,13 +163,17 @@ const {id}=useParams()
       console.log(error.message);
     }
   };
+
+  useEffect(()=>{
+    getAllPosts()
+  },[refresh])
   
   
 
   const fetchData = async () => {
     const response = await getUserById();
-    setData(response);
     console.log(response, "responsegetdata");
+    setData(response);
   };
 
 
@@ -188,19 +197,21 @@ const {id}=useParams()
       );
       successToast(response.data.message)
       setRefresh((prevRefresh) => !prevRefresh);
-      console.log(response, "addfriendnteresponse");
+      console.log("all posts");
+      obj.refreshUseEffectMethod()
     } catch (error) {
       console.log(error.message);
     }
   };
 
   useEffect(() => {
-    getAllPosts();
+    // getAllPosts();
     fetchData();
-  }, [refresh]);
+    // console.log('new monuted')
+  }, [obj.refresh]);
   return (
-    <div>
-      <div>
+    <div className="allpost">
+      <div style={{marginLeft:"5rem"}}>
         {details.map((items) => {
           console.log(items, "itemshenaaaaaaaaaaaaaaaaa");
 

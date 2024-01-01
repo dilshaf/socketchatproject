@@ -237,3 +237,193 @@ function Settings() {
 }
 
 export default Settings;
+
+
+// import React, { useState, useEffect } from "react";
+// import { getUserById } from "../../../services/apiService";
+// import { useParams } from 'react-router-dom';
+// import axios from "axios";
+// import { successToast } from "../../../Toastify/Toast";
+
+// function Settings() {
+//   const [image, setImage] = useState("");
+//   const [isToggled, setToggled] = useState(false);
+//   const [data, setData] = useState({
+//     username: "",
+//     password: "",
+//     email: "",
+//     image: "",
+//     privacy: "public",
+//   });
+
+//   const fetchData = async () => {
+//     try {
+//       const response = await getUserById();
+//       setData(response);
+//     } catch (error) {
+//       console.log(error.message);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchData();
+//   }, []);
+
+//   const handleFileChange = (e) => {
+//     setImage(e.target.files[0]);
+//   };
+
+//   const handleInputChange = (e) => {
+//     setData({ ...data, [e.target.name]: e.target.value });
+//   };
+
+//   const { id } = useParams();
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     const formData = new FormData();
+//     formData.append('username', data.username);
+//     formData.append('email', data.email);
+//     formData.append('password', data.password);
+//     formData.append('image', image);
+//     formData.append("privacy", isToggled ? "public" : "private");
+
+//     try {
+//       let response = await axios.put(`http://localhost:5000/api/admin/up/${localStorage.getItem('id')}`, formData);
+//       if (response.data) {
+//         successToast("updated");
+//       }
+//     } catch (error) {
+//       console.error('Error updating user profile:', error.message);
+//     }
+//   };
+
+//   const handleClickToggle = () => {
+//     setToggled(!isToggled);
+//   };
+
+//   const handlePrivacy = async (postId, value) => {
+//     if (value === '') return alert('please click anyone');
+//     try {
+//       await axios.put('http://localhost:5000/api/admin/privacy', { postId, data: value });
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+
+//   return (
+//     <div className=" max-w-md p-6">
+//       {/* Header */}
+//       <div className="bg-gradient-to-tr from-purple-600 to-violet-400 text-white text-center py-4 mb-6 rounded-t-xl">
+//         <h3 className="text-3xl font-semibold">Update Your Profile</h3>
+//       </div>
+
+//       {/* User Information */}
+//       <div className="bg-white rounded-xl shadow-md p-4 mb-6">
+//         <p>Email: {data.email}</p>
+//         <p>Username: {data.username}</p>
+//         <p>Image: {data.image}</p>
+//       </div>
+
+//       {/* Update Form */}
+//       <form onSubmit={handleSubmit} encType="multipart/form-data">
+//         {/* Username Input */}
+//         <div className="mb-4">
+//           <label htmlFor="username" className="block text-gray-700 text-sm font-bold mb-2">
+//             Username
+//           </label>
+//           <input
+//             type="text"
+//             name="username"
+//             onChange={handleInputChange}
+//             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-cyan-500"
+//           />
+//         </div>
+
+//         {/* Password Input */}
+//         <div className="mb-4">
+//           <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
+//             Password
+//           </label>
+//           <input
+//             type="password"
+//             name="password"
+//             onChange={handleInputChange}
+//             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-cyan-500"
+//           />
+//         </div>
+
+//         {/* Email Input */}
+//         <div className="mb-4">
+//           <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
+//             Email
+//           </label>
+//           <input
+//             type="email"
+//             name="email"
+//             onChange={handleInputChange}
+//             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-cyan-500"
+//           />
+//         </div>
+
+//         {/* Privacy Dropdown */}
+//         <div className="mb-4">
+//           <label htmlFor="privacy" className="block text-gray-700 text-sm font-bold mb-2">
+//             Privacy
+//           </label>
+//           <select
+//             name="privacy"
+//             onChange={(e) => handlePrivacy(data._id, e.target.value)}
+//             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-cyan-500"
+//           >
+//             <option value="">Select</option>
+//             <option value="public">Public</option>
+//             <option value="private">Private</option>
+//           </select>
+//         </div>
+
+//         {/* Profile Picture Input */}
+//         <div className="mb-4">
+//           <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">
+//             Your Profile Pic
+//           </label>
+//           <input
+//             type="file"
+//             name="image"
+//             accept="image/*"
+//             onChange={handleFileChange}
+//             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-cyan-500"
+//           />
+//         </div>
+
+//         {/* Remember Me Checkbox */}
+//         <div className="flex items-center mb-4">
+//           <input
+//             id="checkbox"
+//             type="checkbox"
+//             className="h-5 w-5 mr-2 cursor-pointer"
+//           />
+//           <label
+//             htmlFor="checkbox"
+//             className="text-gray-700 cursor-pointer"
+//           >
+//             Remember Me
+//           </label>
+//         </div>
+
+//         {/* Submit Button */}
+//         <div className="mb-6">
+//           <button
+//             type="submit"
+//             className="w-full rounded-lg bg-gradient-to-tr from-purple-600 to-violet-400 py-3 px-6 text-center font-bold text-white shadow-md hover:shadow-lg active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+//           >
+//             Update
+//           </button>
+//         </div>
+//       </form>
+//     </div>
+//   );
+// }
+
+// export default Settings;

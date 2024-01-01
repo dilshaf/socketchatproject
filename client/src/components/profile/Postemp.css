@@ -16,3 +16,24 @@ span{
     color: #e20808; /* Color when liked */
     display: inline-block; /* Show the solid heart icon when liked */
   }
+  @media (max-width: 990px) {
+    
+    
+    /* .postemp{
+      margin-left: -16rem;
+    } */
+  }
+
+  @media (max-width: 990px) {
+    .flex.justify-between.items-center.text-gray-600 {
+      display: flex;
+      gap: 2rem;
+      margin-left: 2rem;
+    }
+    .flex.items-center.mb-4 {
+      margin-left: 2rem;
+    }
+  }
+
+
+  

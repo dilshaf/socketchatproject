@@ -136,9 +136,10 @@ const Search = () => {
         flexDirection: "column",
         justifyContent: "unset",
         alignItems: "center",
-      }}
+        marginLeft:"-3rem"
+      }} className="postemp"
     >
-      <form className="post-container" onSubmit={handleSubmitData}>
+      <form className="post-container" onSubmit={handleSubmitData} style={{marginLeft:"14rem"}}>
         <div className="post-header">
           <img
             className="post-avatar"

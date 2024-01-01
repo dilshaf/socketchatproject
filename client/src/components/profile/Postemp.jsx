@@ -141,7 +141,7 @@ console.log(data,"llllllllllllllllllllllllllllll");
  
 
   return (
-    <div>
+    <div style={{    marginLeft:" 13rem"}}  className='empost'>
       {
         data.map((items)=>{
           console.log(items,'itemskanan');
@@ -237,7 +237,7 @@ console.log(data,"llllllllllllllllllllllllllllll");
                 {/* <Link to={`share/${items._id}`}>
                   <i className="fa-solid fa-share"></i> Share 0 */}
               <Link to={`/share/${items._id}`} style={{textDecoration:" none",
-    color: "black"}}>
+    color: "black" }}>
           
               <i className="fa-solid fa-share"></i>  Share 0
              

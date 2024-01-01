@@ -7,8 +7,9 @@ const Share = () => {
   // const shareText = "Check out this amazing content!"; // Replace with your actual share text
 
   return (
-    <div className="share-container">
-    <div className="share-box" style={{backgroundColor:"antiquewhite"}}>
+    <div className="share-container" style={{
+    textAlign:"center",backgroundColor: "#0077cc", height: "100vh"}}>
+    <div className="share-box" style={{display:"flex",gap:"10rem"}}>
       <FacebookShareButton url={shareUrl} >
         <FaFacebook size={32} color="#3b5998" />
         <span>Facebook</span>
@@ -29,6 +30,9 @@ const Share = () => {
         <span>Email</span>
       </EmailShareButton>
       </div>
+
+
+  
     </div>
   );
 };

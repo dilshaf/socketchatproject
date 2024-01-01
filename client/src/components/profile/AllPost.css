@@ -1,0 +1,14 @@
+@media (max-width: 990px) {
+    .allpost{
+        margin-left: 2rem;
+        margin-top: -13rem
+    }
+    
+  }
+  @media (max-width: 660px) {
+    .allpost{
+        margin-left: 6rem;
+     
+    }
+    
+  }

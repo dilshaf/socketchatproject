@@ -109,3 +109,42 @@
       margin-bottom: 8px;
     }
   }
+
+
+   @media (max-width: 990px) {
+    .postemp {
+      margin-top: -14rem;
+     
+    }
+    
+    
+  }
+  @media (max-width: 574px) {
+    .postemp {
+      flex-wrap: wrap;
+     
+     
+    }
+  }
+    
+ 
+
+ 
+
+    
+       @media (max-width: 574px) {
+       
+        .postemp{
+          margin-left: -4rem;
+        }
+        .post-container{
+          display: flex;
+    flex-direction: column;
+    margin-left: 19rem;
+        }
+        .empost{
+          margin-left: 18rem;
+        }
+      } 
+ 
+ 

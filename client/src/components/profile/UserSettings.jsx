@@ -37,16 +37,16 @@ const UserSettings = ({ element }) => {
         <div className="div1">
           <Header toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
         </div>
-        <div className="div2">
+        <div className="div2" style={{marginTop:"5rem"}}>
           <UserProfile />
           <div
-            className="flex-1"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
+            className="flex" 
+            // style={{
+            //   display: "flex",
+            //   justifyContent: "center",
+            //   flexDirection: "column",
+            //   alignItems: "center",
+            // }}
           >
             {element}
           </div>

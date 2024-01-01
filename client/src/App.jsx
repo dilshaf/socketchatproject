@@ -12,6 +12,9 @@ import CommentSection from "./components/profile/CommentSection";
 import Posts from "./components/profile/posts/Posts";
 import AllPost from "./components/profile/AllPost";
 import Share from "./components/profile/Share";
+import Videocall from "./components/profile/Videocall";
+import AudioChat from "./components/profile/AudioChat";
+import Message from "./components/profile/Message";
 
 const App = () => {
   const[details,setDetails]=useState([])
@@ -40,6 +43,9 @@ const App = () => {
 
           <Route path="posts" element={<Posts />} />
           <Route index path="allpost" element={<AllPost details={details}/>} />
+          <Route  path="vdocall" element={<Videocall/>} />
+          <Route  path="audio" element={<AudioChat/>} />
+          <Route  path="message" element={<Message/>} />
          
 
         </Route>

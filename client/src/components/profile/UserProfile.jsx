@@ -5,20 +5,24 @@ import FriendsList from './FriendsList';
 import axios from 'axios'
 import { getUserById } from '../../services/apiService';
 import { AuthContext } from '../../context/AuthContext';
+import './UserProfile.scss'
+import Avatar from '@mui/material/Avatar';
+import { Link } from 'react-router-dom';
 
 
 
 export default function Basic() {
 
-  // refreshUseEffectMethod
+ 
 
-  const {refresh} = useContext(AuthContext)
+  const {obj} = useContext(AuthContext)
+  // const {refreshUseEffectMethod}=useContext(AuthContext)
   const [datas,setDatas]=useState([])
-  console.log(datas.length,'datas');
+  // console.log(refresh,'datas refresh');
 
   const { selectedPost } = useContext(AuthContext);
 
-  // console.log(value,'value');
+  
   const getPost=async(req,res)=>{
     try {
       let response=await axios.get(`http://localhost:5000/api/posts/get/${localStorage.getItem("id")}`)
@@ -37,13 +41,14 @@ export default function Basic() {
     let response;
 
     if (selectedPost) {
-      // Use the selectedPost data if available
+    
       response = selectedPost;
       console.log(response,'selectedpost');
     } else {
-      // Fetch user data if selectedPost is not available
+    
       try {
         response = await getUserById();
+        // refreshUseEffectMethod()
       } catch (error) {
         console.log(error.message);
       }
@@ -56,7 +61,7 @@ export default function Basic() {
   useEffect(() => {
     fetchData();
     getPost()
-  }, [refresh, selectedPost]);
+  }, [obj.refresh, selectedPost]);
 
 
  
@@ -64,68 +69,84 @@ export default function Basic() {
 console.log(data,'postlength');
   
   return (
-    <div className="vh-100" style={{marginLeft: '-4rem'}}  >
+    <>
+    <div className="vh-100"   >
     
-      <MDBContainer >
-        <MDBRow className="justify-content-center" >
-          <MDBCol md="9" lg="7" xl="5" className="mt-5" >
-            <MDBCard style={{ borderRadius: '15px' }} >
-              <MDBCardBody className="p-4">
-                <div className="d-flex text-black">
-                  <div className="flex-shrink-0">
-                    <MDBCardImage
-                      style={{ width: '180px', borderRadius: '10px' }}
-                      
-                      src={`http://localhost:5000/uploads/${data.profilepic || data.image}`}
-                      
-                    
-                      alt='Generic placeholder image'
-                      fluid 
-                      accept="image/*"/>
-                      
-                  </div>
-                  <div className="flex-grow-1 ms-3">
-                    <MDBCardTitle>{data.username}</MDBCardTitle>
-                    <MDBCardText>{data.email}</MDBCardText>
-
-                    <div className="d-flex justify-content-start rounded-3 p-2 mb-2"
-                      style={{ backgroundColor: '#efefef' }}>
-                      {/* <div>
-                        <p className="small text-muted mb-1">Articles</p>
-                        <p className="mb-0">41</p>
-                      </div> */}
-                      <div className="px-3">
-                        <p className="small text-muted mb-1" style={{marginLeft: "-1rem"}}>Following</p>
-                        {selectedPost ? <p className="mb-0">{data.friends?.length}</p> : <p className="mb-0">{data.followers?.length}</p>}
-                        
-                      </div>
-                      <div>
-                        <p className="small text-muted mb-1">Post</p>
-                        <p className="mb-0">0{datas?.length}</p>
-                      </div>
-                    </div>
-                    <div className="d-flex pt-1">
-                      <MDBBtn outline className="me-1 flex-grow-1">Chat</MDBBtn>
-                      <MDBBtn className="flex-grow-1">Follow</MDBBtn>
-                    </div>
-                    
-                  </div>
-                </div>
-              </MDBCardBody>
-            </MDBCard>
-          </MDBCol>
-        </MDBRow>
-      </MDBContainer>
+      
        
-      <div>
+
+
+      <div class="frame">
+  <div class="center">
+    
+		<div class="profile">
+			<div class="image" >
+			
+        <Avatar
+      alt="Mark Zuckerberg"
+      style={{marginLeft:"1rem"}}
+      src={`http://localhost:5000/uploads/${data.profilepic || data.image}`}
+      className="leaderboard__picture"
+    />
+			</div>
+			
+			<div class="name">{data.username}</div>
+			<div class="job">{data.email}</div>
+
+      {/* <div class="actions">
+				
+				<button class="btn">videocall</button>
+			</div> */}
+			
+			<div class="actions">
+     <Link to={"vdocall"}><button class="btn">videocall</button></Link> 
+				<Link to={'message'}><button class="btn">Message</button></Link>
+       <Link to={"audio"}><button class="btn">AudioChat</button></Link> 
+			</div>
+		</div>
+		
+		<div class="stats">
+			<div class="box">
+			<p className="value">{datas?.length}</p>
+				<span class="parameter">Posts</span>
+			</div>
+			<div class="box">
+				<span class="value">1387</span>
+				<span class="parameter">Likes</span>
+			</div>
+			<div class="box">
+      {selectedPost ? <p className="value">{data.friends?.length}</p> : <p className="value">{data.followers?.length}</p>}
+				<span class="parameter">Follower</span>
+			</div>
+		</div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       
-      </div>
 
-      <div>
-        <FriendsList followers={data.followers}/>
-      </div>
+     
 
     </div>
+    
+     <div style={{    marginTop:" 26rem",
+    marginLeft: "-2rem"}} className='frnds'>
+     <FriendsList followers={data.followers}/>
+   </div>
+   </>
   );
 }
