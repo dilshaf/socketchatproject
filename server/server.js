@@ -6,13 +6,16 @@ import bodyParser from 'body-parser'
 import morgan from 'morgan'
 import router from './routes/authRoutes.js'
 import Postrouter from './routes/postRoutes.js'
-
+import { createServer } from 'http'
+import { Server } from 'socket.io';
 // import router from './routes/postRoutes.js'
 import {dirname,join} from 'path'
 import {fileURLToPath} from 'url'
 import path from 'path'
 import http from 'http';
-import { Server } from 'socket.io';
+import {saveSession,findSession,findAllSessions} from "./sessionStorage.js"
+import { findMessageForUser, saveMessage } from './messageStorage.js'
+
 import { v4 as uuidV4 } from 'uuid';
 
 
@@ -21,8 +24,14 @@ const __filename=fileURLToPath(import.meta.url)
 const __dirname=dirname(__filename)
 
 const app=express()
-const server = http.createServer(app);
-const io = new Server(server);
+const httpServer=http.createServer(app);
+const io = new Server(httpServer,{
+    cors:{
+        origin:"http://localhost:5173",
+        methods:["GET","POST"],
+    },
+});
+
 dotenv.config()
 
 //MIDDLEWARES
@@ -47,30 +56,114 @@ app.use((err, req, res, next) => {
   });
 
 
+  io.on("connection", (socket) => {
+    const transport = socket.conn.transport.name; // in most cases, "polling"
+  
+    socket.conn.on("upgrade", () => {
+      const upgradedTransport = socket.conn.transport.name; // in most cases, "websocket"
+    });
+  });
+io.use((socket,next)=>{
 
-app.get('/', (req, res) => {
-    res.redirect(`/${uuidV4()}`)
+    const sessionId=socket.handshake.auth.sessionId
+    if(sessionId){
+        const session=findSession(sessionId)
+        if(session){
+            socket.sessionId=sessionId
+            socket.userId=session.userId
+            socket.username=session.username
+            return next()
+
+        }else{
+            return next(new Error("invalid session"))
+        }
+    }
+    const username=socket.handshake.auth.username
+    if(!username){
+        return next(new Error("Invalid username"))
+    }
+    socket.username=username,
+    socket.userId=uuidV4()
+    socket.sessionId=uuidV4()
+    next()
 })
-// If they join a specific room, then render that room
-app.get('/:room', (req, res) => {
-    res.render('room', {roomId: req.params.room})
-})
-// When someone connects to the server
-io.on('connection', socket => {
-    // When someone attempts to join the room
-    socket.on('join-room', (roomId, userId) => {
-        socket.join(roomId)  // Join the room
-        socket.broadcast.emit('user-connected', userId) // Tell everyone else in the room that we joined
-        
-        // Communicate the disconnection
-        socket.on('disconnect', () => {
-            socket.broadcast.emit('user-disconnected', userId)
+
+function getMessagesForUser({userId}){
+        const messagesPerUser=new Map()
+        findMessageForUser(userId).forEach((message)=>{
+            const {from,to}=message
+            const otherUser=userId===from?to:from
+            if(messagesPerUser.has(otherUser)){
+                messagesPerUser.get(otherUser).push(message)
+            }else{
+                messagesPerUser.set(otherUser,[message])
+            }
+        })
+}
+io.on("connection",async(socket)=>{
+    saveSession(socket.sessionId,{
+        userId:socket.userId,
+        username:socket.username,
+        connected:true,
+    })
+
+    socket.join(socket.userId)
+    const users=[]
+    const userMessages=getMessagesForUser(socket.userId)
+   findAllSessions().forEach((session)=>{
+    if(session.userId!==socket.userId){
+    users.push({
+        userId:session.userId,
+        username:session.username,
+        connected:session.connected,
+        messages: (userMessages && userMessages[session.userId]) || [],
+    })
+}
+   })
+    //socket events
+    socket.emit("users",users)
+    socket.emit("session",{sessionId:socket.sessionId,userId:socket.userId,username:socket.username})
+    socket.broadcast.emit("user connected",{userId:socket.userId,username:socket.username})
+    const messages=[]
+
+    socket.on("private message",({content,to})=>{
+       const message={
+        from:socket.userId,
+        to,
+        content
+       }
+       socket.to(to).emit("private message",message)
+       saveMessage(message)
+    })
+
+
+    socket.on("user message",({userId,username})=>{
+        const userMessages= getMessagesForUser(socket.userId)
+        socket.emit("user messages",{
+            userId,
+            username,
+            messages: (userMessages && userMessages[session.userId]) || [],
         })
     })
+
+    socket.on("disconnect",async()=>{
+const matchingSockets=await io.in(socket.userId).allSockets()
+const isDisconnected=matchingSockets.size===0
+if(isDisconnected){
+    socket.broadcast.emit("user disconnected",{
+        userId:socket.userId,
+        username:socket.username
+    })
+    saveSession(socket.sessionId,{
+        userId:socket.userId,
+        username:socket.username,
+        connected:socket.connected
+    })
+}
+    })
 })
-
-
-
+httpServer.listen(8009)
+console.log("listening to port......");
 
 
 

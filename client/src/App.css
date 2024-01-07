@@ -4,7 +4,11 @@
   padding: 2rem;
   text-align: center;
 }
-
+@font-face {
+  font-family: 'Open Sans';
+  src: url('https://fonts.gstatic.com/s/opensans/v40/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2') format('woff2');
+  font-display: swap; /* Fallback font is used until the custom font is loaded */
+}
 .logo {
   height: 6em;
   padding: 1.5em;

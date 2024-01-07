@@ -25,7 +25,7 @@ export default function Basic() {
   
   const getPost=async(req,res)=>{
     try {
-      let response=await axios.get(`http://localhost:5000/api/posts/get/${localStorage.getItem("id")}`)
+      let response=await axios.get(`http://localhost:3000/api/posts/get/${localStorage.getItem("id")}`)
       console.log(response,"res");
       setDatas(response.data)
       
@@ -85,7 +85,7 @@ console.log(data,'postlength');
         <Avatar
       alt="Mark Zuckerberg"
       style={{marginLeft:"1rem"}}
-      src={`http://localhost:5000/uploads/${data.profilepic || data.image}`}
+      src={`http://localhost:3000/uploads/${data.profilepic || data.image}`}
       className="leaderboard__picture"
     />
 			</div>
