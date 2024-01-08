@@ -13,7 +13,7 @@ const { selectedPost,refreshUseEffectMethod, refresh} = useContext(AuthContext);
 
 useEffect(() => {
 
-  console.log("Component mounted or refreshed");
+  // console.log("Component mounted or refreshed");
 }, [refreshUseEffectMethod]);
   return (
     <div

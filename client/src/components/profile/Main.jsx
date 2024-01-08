@@ -10,12 +10,12 @@ const Main = ({socket}) => {
   const[messages,setMessages]=useState([])
 
   function handleChange(e){
-    console.log(e.target.value);
+    //console.log(e.target.value);
          setNewUser(e.target.value)
   }
 //   useEffect(()=>{
 //     socket.on("users",(users)=>{
-//         console.log(users);
+//         //console.log(users);
 //         const messageArr=[]
 //         for(const {userId,username} of users){
 //          const newMessage={type:"UserStatus",userId,username}
@@ -42,12 +42,13 @@ useEffect(() => {
     checkIfUserExists()
 
     socket.on("connect",()=>{
-        console.log("connected");
+        //console.log("connected");
     })
     
     socket.on("disconnect", () => {
-        console.log("disconnected");
+        //console.log("disconnected");
     });
+  
     socket.on("session",({sessionId,userId,username})=>{
         socket.auth={sessionId:sessionId}
         localStorage.setItem("sessionId",sessionId)
@@ -55,7 +56,7 @@ useEffect(() => {
     })
 
     socket.on("users", (users) => {
-    // console.log(users)
+    // //console.log(users)
     setUsers(users);
     });
   
@@ -95,12 +96,17 @@ useEffect(() => {
     setMessage("")
   }
 
-  
+  // //console.log(user,'user');   //currentuser,userId
+  // //console.log(users,'setUsers');  //frnds of current user id,connected status,name,message
+  // //console.log(messages,'message');  user,messages
   return (
     <div>
           <div className='content'>
       <div className='container mt-3'>
-        {user.userId &&(
+        {user.userId 
+       
+        &&(
+          
          <Chat user={user} setUsers={setUsers} message={message} messages={messages} sendMessage={sendMessage} users={users} socket={socket} setMessages={setMessages}/>
         )}
         {!user.userId && (

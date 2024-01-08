@@ -11,7 +11,7 @@ import { successToast } from "../../Toastify/Toast";
 const AllPost = ({ postid ,commentid}) => {
   const { obj } = useContext(AuthContext);
 
-  // console.log(v,'vvvvv')
+  // //console.log(v,'vvvvv')
   const [refresh, setRefresh] = useState(false);
   const { handlePostClick } = useContext(AuthContext);
   const [text, setText] = useState('');
@@ -37,11 +37,11 @@ const {id}=useParams()
   //       commentid: commentid,
   //       text: text,
   //     });
-  //     console.log(response,'update res');
+  //     //console.log(response,'update res');
 
   //     return true
 
-  //     console.log(response.data); 
+  //     //console.log(response.data); 
 
   //   } catch (error) {
   //     console.error('Error updating comment:', error.message);
@@ -55,7 +55,7 @@ const {id}=useParams()
   const currentDateTime = new Date();
 
   const likePost = async (postid) => {
-    console.log(`  post ${postid}`);
+    //console.log(`  post ${postid}`);
 
     try {
       const userid = localStorage.getItem("id");
@@ -70,7 +70,7 @@ const {id}=useParams()
         { userid, postid }
       );
 
-      console.log(response, "likeresponse");
+      //console.log(response, "likeresponse");
       successToast(response.data.message);
       setRefresh(!refresh)
       getAllPosts();
@@ -82,7 +82,7 @@ const {id}=useParams()
     try {
       const userid = localStorage.getItem("id");
       if (!userid) {
-        console.log("user not found");
+        //console.log("user not found");
         return;
       }
       let response = await axios.post(
@@ -90,11 +90,11 @@ const {id}=useParams()
         { userid, text: commentText, postid }
 
       );
-      console.log(response, "commentresponse");
+      //console.log(response, "commentresponse");
       successToast("comment succesfully")
       setRefresh(!refresh);
     } catch (error) {
-      console.log(error.message);
+      //console.log(error.message);
     }
   };
 
@@ -102,14 +102,14 @@ const {id}=useParams()
   //   try {
   //     const userid=localStorage.getItem("id")
   //     if(!userid){
-  //       console.log('user not found');
+  //       //console.log('user not found');
   //       return
   //     }
 
   //     let response=await axios.post("http://localhost:3000/api/posts/addfriend",{userid,username:friend,postid})
-  //     console.log(response.friends,'friendres');
+  //     //console.log(response.friends,'friendres');
   //   } catch (error) {
-  //     console.log(error.message);
+  //     //console.log(error.message);
 
   //   }
   // }
@@ -122,11 +122,11 @@ const {id}=useParams()
   // const getAllPosts = async () => {
   //   try {
   //     let response = await axios.get("http://localhost:3000/api/posts/get");
-  //     console.log(response, "getallpost");
+  //     //console.log(response, "getallpost");
   //     const publicPosts = response.data.filter(post => post.privacy === "public");
   //     setDetails(publicPosts);
   //   } catch (error) {
-  //     console.log(error.message);
+  //     //console.log(error.message);
   //   }
   // };
 
@@ -134,7 +134,7 @@ const {id}=useParams()
   // const getAllPosts = async () => {
   //   try {
   //     const response = await axios.get("http://localhost:3000/api/posts/get");
-  //     console.log(response, "getallpost");
+  //     //console.log(response, "getallpost");
   
   //     if (response && response.data) {
   //       const publicPosts = response.data.filter(post => post.privacy === "public");
@@ -143,14 +143,14 @@ const {id}=useParams()
   //       console.error('Invalid response format:', response);
   //     }
   //   } catch (error) {
-  //     console.log(error.message);
+  //     //console.log(error.message);
   //   }
   // };
 
   const getAllPosts = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/posts/get");
-      console.log(response, "getallpost");
+      //console.log(response, "getallpost");
   
       if (response && response.data) {
         const publicPosts = response.data.filter(post => post.privacy === "public");
@@ -160,7 +160,7 @@ const {id}=useParams()
         console.error('Invalid response format:', response);
       }
     } catch (error) {
-      console.log(error.message);
+      //console.log(error.message);
     }
   };
 
@@ -172,21 +172,21 @@ const {id}=useParams()
 
   const fetchData = async () => {
     const response = await getUserById();
-    console.log(response, "responsegetdata");
+    //console.log(response, "responsegetdata");
     setData(response);
   };
 
 
 
   const addFriend = async (friendId) => {
-    console.log(friendId, "friendId");
+    //console.log(friendId, "friendId");
 
     try {
       const userId = localStorage.getItem("id");
-      console.log(userId, "useridddd");
+      //console.log(userId, "useridddd");
 
       if (!userId) {
-        console.log("user not found");
+        //console.log("user not found");
       }
       let response = await axios.post(
         "http://localhost:3000/api/posts/addfriend",
@@ -197,23 +197,23 @@ const {id}=useParams()
       );
       successToast(response.data.message)
       setRefresh((prevRefresh) => !prevRefresh);
-      console.log("all posts");
+      //console.log("all posts");
       obj.refreshUseEffectMethod()
     } catch (error) {
-      console.log(error.message);
+      //console.log(error.message);
     }
   };
 
   useEffect(() => {
     // getAllPosts();
     fetchData();
-    // console.log('new monuted')
+    // //console.log('new monuted')
   }, [obj.refresh]);
   return (
     <div className="allpost">
       <div style={{marginLeft:"5rem"}}>
         {details.map((items) => {
-          console.log(items, "itemshenaaaaaaaaaaaaaaaaa");
+          //console.log(items, "itemshenaaaaaaaaaaaaaaaaa");
 
           return (
             <div className="max-w-xl mx-auto bg-white p-6 rounded-md shadow-md mt-8">
@@ -342,7 +342,7 @@ const {id}=useParams()
               {/* {showComments && (
                 <div className="comments-section border-t border-gray-200 pt-4">
                   {items.comments.map((item) => {
-                    console.log(item, "itemmmmm");
+                    //console.log(item, "itemmmmm");
                     return (
                       <>
                         <img

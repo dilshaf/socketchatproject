@@ -57,7 +57,7 @@ app.use((err, req, res, next) => {
 
 
   io.on("connection", (socket) => {
-    const transport = socket.conn.transport.name; // in most cases, "polling"
+    const transport = socket.conn.transport.name; // in most cases, "x"
   
     socket.conn.on("upgrade", () => {
       const upgradedTransport = socket.conn.transport.name; // in most cases, "websocket"
@@ -106,10 +106,15 @@ io.on("connection",async(socket)=>{
         username:socket.username,
         connected:true,
     })
+ 
+
+    console.log(socket.username,socket.userId,socket.sessionId,'sickerrtt');
 
     socket.join(socket.userId)
     const users=[]
     const userMessages=getMessagesForUser(socket.userId)
+    console.log(userMessages,'usermessages');
+    
    findAllSessions().forEach((session)=>{
     if(session.userId!==socket.userId){
     users.push({
@@ -117,7 +122,9 @@ io.on("connection",async(socket)=>{
         username:session.username,
         connected:session.connected,
         messages: (userMessages && userMessages[session.userId]) || [],
+           
     })
+console.log(users,'userssssssssssss');
 }
    })
     //socket events

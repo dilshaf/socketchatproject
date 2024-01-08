@@ -15,9 +15,6 @@
 
 
 
-
-
-
 import React from 'react';
 import { io } from 'socket.io-client';
 import Main from './Main';
@@ -27,6 +24,8 @@ const socket = io('ws://localhost:8009', {
   path: '/socket.io',
   transports: ['websocket'],
 });
+
+//error avoid 
 socket.on("connect", () => {
   const transport = socket.io.engine.transport.name; // in most cases, "polling"
 
@@ -34,6 +33,8 @@ socket.on("connect", () => {
     const upgradedTransport = socket.io.engine.transport.name; // in most cases, "websocket"
   });
 });
+
+
 const Message = () => {
   return <Main socket={socket} />;
 }

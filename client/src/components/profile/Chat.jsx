@@ -20,6 +20,7 @@ const Chat = ({ user, messages, setMessages, socket, users, setUsers }) => {
     },
     [users]
   );
+  
   const handleConnectionStatus = useCallback(
     (userId, status, newUser) => {
       const userIndex = users.findIndex((u) => u.userId === userId);
@@ -80,21 +81,24 @@ const Chat = ({ user, messages, setMessages, socket, users, setUsers }) => {
     [setMessages, messages, handleNewMessageStatus, selecteduser]
   );
 
-  const userMessages = useCallback(({ messages }) => {
-    const chatMessages = [];
-    messages.forEach(({ content, from }) => {
-      chatMessages.push({ userId: from, message: content });
-      setMessages([...chatMessages]);
-    });
-  }, [setMessages]);
+  socket.on("user messages", (incomingMessages) => {
+    if (incomingMessages.messages) {
+      const chatMessages = [];
+      incomingMessages.messages.forEach(({ content, from }) => {
+        chatMessages.push({ userId: from, message: content });
+      });
+      setMessages([...messages, ...chatMessages]);
+    }
+  });
+  
   useEffect(() => {
     socket.on("user connected", (user) => userConnected(user));
 
     socket.on("user disconnected", (user) => userDisconnected(user));
 
     socket.on("private message", (message) => privateMessage(message));
-    socket.on("user messages", (message) => userMessages(messages));
-  }, [socket, userConnected, userDisconnected, privateMessage,userMessages]);
+    // socket.on("user messages", (message) => userMessages(messages));
+  }, [socket, userConnected, userDisconnected, privateMessage]);
 
   const sendMessage = () => {
     socket.emit("private message", {
@@ -131,7 +135,7 @@ const Chat = ({ user, messages, setMessages, socket, users, setUsers }) => {
             <div className="text-center bg-primary">Connected users</div>
             {users?.length > 0 ? (
               users.map((user, index) => {
-                console.log(user.username, "user");
+                // //console.log(user.username, "user");
                 return (
                   <div
                     key={index}
@@ -143,20 +147,20 @@ const Chat = ({ user, messages, setMessages, socket, users, setUsers }) => {
                         <img
                           src=""
                           className="rounded-circle mx-2"
-                          alt={user.username}
+                          alt={user?.username}
                           width="40"
                           height="40"
                         />
                       </div>
                       <span
-                        className={user.connected ? "online" : "offline"}
+                        className={user?.connected ? "online" : "offline"}
                       ></span>
                       <div className="flex-grow-1">
                         <strong>{user?.username}</strong>
                       </div>
                       <span
                         className={
-                          user.hasNewMessage ? "new-message-alert" : ""
+                          user?.hasNewMessage ? "new-message-alert" : ""
                         }
                       ></span>
                     </div>
